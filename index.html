@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeaShop - магазин чая</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="logo" onclick="location.reload()">TeaShop</div>
+        
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Поиск товаров...">
+            <button onclick="searchProducts()">🔍</button>
+        </div>
+               <div class="header-btns">
+            <button onclick="showFavorites()">❤ Избранное <span id="favCount">0</span></button>
+            <button onclick="showCart()">🛒 Корзина <span id="cartCount">0</span></button>
+            <button id="authBtn" onclick="showAuth()">👤 Войти</button>
+            <button onclick="changeTheme()">🌓</button>
+            <button onclick="toggleAccessibility()">👁 А+</button>
+        </div>
+    </header>
+    <nav>
+        <button onclick="filterByCategory('all')">Все товары</button>
+        <button onclick="filterByCategory('tea')"> Чай</button>
+        <button onclick="filterByCategory('coffee')"> Кофе</button>
+        <button onclick="filterByCategory('accessories')"> Аксессуары</button>
+        <button onclick="startGame()" style="background:#ff9800;">🎮 Игра (бонусы)</button>
+    </nav>
+    <div class="slider">
+        <div class="slides">
+            <div class="slide active">🎉 Скидка 30% на весь чай! Только сегодня!</div>
+            <div class="slide">☕ Новинка! Кофе из Бразилии уже в продаже!</div>
+            <div class="slide">🚚 Бесплатная доставка при заказе от 2000₽</div>
+        </div>
+        <button onclick="prevSlide()">←</button>
+        <button onclick="nextSlide()">→</button>
+    </div>
+    <div class="filters-block">
+        <h3>Фильтры:</h3>
+        <div class="filter-row">
+            <label>Цена от: <input type="number" id="priceMin" value="0" onchange="applyFilters()"></label>
+            <label>Цена до: <input type="number" id="priceMax" value="10000" onchange="applyFilters()"></label>
+            
+            <label>Рейтинг:
+                <select id="ratingFilter" onchange="applyFilters()">
+                    <option value="0">Любой</option>
+                    <option value="4">4 и выше</option>
+                    <option value="3">3 и выше</option>
+                </select>
+            </label>
+            
+            <label>Вес:
+                <select id="weightFilter" onchange="applyFilters()">
+                    <option value="all">Любой</option>
+                    <option value="100">100г</option>
+                    <option value="250">250г</option>
+                    <option value="500">500г</option>
+                    <option value="1000">1000г</option>
+                </select>
+            </label>
+            
+           <label>Страна:
+    <select id="countryFilter" onchange="applyFilters()">
+        <option value="all">Все страны</option>
+        <option value="Китай">Китай</option>
+        <option value="Индия">Индия</option>
+        <option value="Япония">Япония</option>
+        <option value="Кения">Кения</option>
+        <option value="Шри-Ланка">Шри-Ланка</option>
+        <option value="Колумбия">Колумбия</option>
+        <option value="Бразилия">Бразилия</option>
+        <option value="Эфиопия">Эфиопия</option>
+        <option value="Вьетнам">Вьетнам</option>
+        <option value="Россия">Россия</option>
+        <option value="Гватемала">Гватемала</option>
+        <option value="Франция">Франция</option>
+        <option value="Турция">Турция</option>
+    </select>
+</label>
+            
+            <button onclick="resetFilters()">Сбросить</button>
+        </div>
+    </div>
+    <div class="sort-block">
+        <label>Сортировка:
+            <select id="sortSelect" onchange="applySort()">
+                <option value="default">По умолчанию</option>
+                <option value="priceAsc">Сначала дешёвые</option>
+                <option value="priceDesc">Сначала дорогие</option>
+                <option value="rating">По рейтингу</option>
+                <option value="popular">Популярные</option>
+            </select>
+        </label>
+        <span id="productsCount"></span>
+    </div>
+    <div id="productsList" class="products-grid">
+        <p>Загрузка товаров...</p>
+    </div>
+    <div id="pagination"></div>
+    <h2 class="section-title">👁 Вы недавно смотрели</h2>
+    <div id="recentlyViewed" class="products-grid"></div>
+
+    <h2 class="section-title">🔥 Популярные товары</h2>
+    <div id="popularProducts" class="products-grid"></div>
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('productModal')">×</span>
+            <div id="productDetail"></div>
+        </div>
+    </div>
+
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('authModal')">×</span>
+            <h2>Вход</h2>
+            <input type="email" id="loginEmail" placeholder="Email">
+            <input type="password" id="loginPassword" placeholder="Пароль">
+            <button onclick="login()">Войти</button>
+            <hr>
+            <h2>Регистрация</h2>
+            <input type="text" id="regName" placeholder="Имя">
+            <input type="email" id="regEmail" placeholder="Email">
+            <input type="password" id="regPassword" placeholder="Пароль (мин 6 символов)">
+            <button onclick="register()">Зарегистрироваться</button>
+        </div>
+    </div>
+
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('cartModal')">×</span>
+            <h2>Корзина</h2>
+            <div id="cartItems"></div>
+            <h3>Итого: <span id="cartTotal">0</span> ₽</h3>
+            <input type="text" id="promoInput" placeholder="Промокод">
+            <button onclick="applyPromo()">Применить</button>
+            <button onclick="checkout()" style="background:#4caf50;">Оформить заказ</button>
+        </div>
+    </div>
+
+    <div id="favModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('favModal')">×</span>
+            <h2>Избранное</h2>
+            <div id="favItems"></div>
+        </div>
+    </div>
+
+    <div id="gameModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('gameModal')">×</span>
+            <h2>🎮 Угадай число от 1 до 5</h2>
+            <p>Угадайте и получите бонусы + промокод!</p>
+            <input type="number" id="guessNumber" min="1" max="5" placeholder="Ваше число">
+            <button onclick="checkGuess()">Угадать</button>
+            <p id="gameResult"></p>
+        </div>
+    </div>
+
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('profileModal')">×</span>
+            <div id="profileInfo"></div>
+        </div>
+    </div>
+    <footer>
+        <p>© 2026 TeaShop. Интернет-магазин чая и кофе.</p>
+    </footer>
+
+        <script src="js/data.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/favorites.js"></script>
+    <script src="js/reviews.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
