@@ -24,7 +24,7 @@ function login() {
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
         closeModal('authModal');
         updateAuthButton();
-        alert(' Добро пожаловать, преподаватель!\nУ вас 1000 бонусов и промокод TEACHER2026');
+        alert('👩‍🏫 Добро пожаловать, преподаватель!\nУ вас 1000 бонусов и промокод TEACHER2026');
         return;
     }
     
