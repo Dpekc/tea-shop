@@ -13,6 +13,21 @@ function login() {
         return;
     }
     
+    if (email === 'liubovsheyda@gmail.com' && password === 'Teacher_2026') {
+        currentUser = {
+            id: 'teacher',
+            name: 'Любовь (преподаватель)',
+            email: email,
+            bonuses: 1000,
+            promocodes: ['TEACHER2026']
+        };
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        closeModal('authModal');
+        updateAuthButton();
+        alert(' Добро пожаловать, преподаватель!\nУ вас 1000 бонусов и промокод TEACHER2026');
+        return;
+    }
+    
     var users = JSON.parse(localStorage.getItem('teaUsers') || '[]');
     var foundUser = null;
     for (var i = 0; i < users.length; i++) {
